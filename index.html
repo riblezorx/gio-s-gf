@@ -1,0 +1,1133 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        overflow: hidden;
+        background-color: #7a1111;
+        color: #fff;
+        transition: background-color 1s ease;
+      }
+
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.8s ease;
+        flex-direction: column;
+      }
+      .scene.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* ─── SCENE 1: LOGIN ─── */
+      #scene-1 {
+        flex-direction: row;
+        gap: clamp(20px, 6vw, 80px);
+        padding: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .polaroid {
+        background: #fff;
+        padding: clamp(8px, 2vw, 15px) clamp(8px, 2vw, 15px)
+          clamp(30px, 6vw, 50px);
+        border-radius: 5px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        transform: rotate(-3deg);
+        flex-shrink: 0;
+      }
+      .polaroid img {
+        width: clamp(120px, 28vw, 250px);
+        aspect-ratio: 9/16;
+        object-fit: cover;
+        border-radius: 3px;
+        display: block;
+      }
+      .polaroid p {
+        color: #333;
+        text-align: center;
+        margin-top: clamp(8px, 2vw, 15px);
+        font-family: "Caveat", cursive;
+        font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      }
+
+      .login-box {
+        text-align: center;
+      }
+      .login-box h2 {
+        font-size: clamp(0.65rem, 2.2vw, 1rem);
+        letter-spacing: 2px;
+        margin-bottom: clamp(12px, 3vw, 20px);
+        font-weight: 300;
+      }
+
+      .dots {
+        display: flex;
+        justify-content: center;
+        gap: clamp(6px, 2vw, 10px);
+        margin-bottom: clamp(16px, 4vw, 30px);
+        transition: transform 0.1s;
+      }
+      .dot {
+        width: clamp(10px, 3vw, 15px);
+        height: clamp(10px, 3vw, 15px);
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .dot.filled {
+        background: #fff;
+      }
+
+      .numpad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(8px, 2.5vw, 15px);
+        max-width: clamp(170px, 50vw, 250px);
+        margin: 0 auto;
+      }
+      .numpad button {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        font-size: clamp(1rem, 3.5vw, 1.5rem);
+        width: clamp(44px, 12vw, 60px);
+        height: clamp(44px, 12vw, 60px);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: "Poppins", sans-serif;
+      }
+      .numpad button:hover,
+      .numpad button:active {
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+      }
+
+      /* ─── SCENE 2 ─── */
+      #scene-2 h1 {
+        font-size: clamp(2rem, 10vw, 4rem);
+        letter-spacing: 5px;
+        animation: pulse 2s infinite;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      /* ─── SCENE 3: LOADING ─── */
+      #scene-3 {
+        background-color: #fcf9f2;
+        color: #333;
+      }
+      .loading-text {
+        font-family: "Caveat", cursive;
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        margin-bottom: 10px;
+        color: #7a1111;
+      }
+      .progress-bar {
+        width: clamp(180px, 70vw, 300px);
+        height: 8px;
+        background: #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 20px;
+      }
+      .progress-fill {
+        height: 100%;
+        background: #6a1b9a;
+        width: 0;
+        animation: loadBar 3s forwards;
+      }
+
+      /* ─── SCENE 4: ANIMATED ENVELOPE ─── */
+      #scene-4 {
+        perspective: 900px;
+        overflow: hidden;
+      }
+
+      #scene-4 .s4-title {
+        font-family: "Caveat", cursive;
+        font-size: clamp(1.4rem, 5vw, 2.2rem);
+        margin-bottom: clamp(18px, 4vw, 30px);
+        text-align: center;
+        opacity: 1;
+        transition: opacity 0.4s;
+      }
+
+      #scene-4 .s4-hint {
+        margin-top: clamp(12px, 3vw, 20px);
+        opacity: 0.65;
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        letter-spacing: 1px;
+        transition: opacity 0.4s;
+      }
+
+      /* ── Envelope wrapper ── */
+      .env-wrap {
+        position: relative;
+        width: clamp(240px, 60vw, 340px);
+        height: clamp(160px, 42vw, 230px);
+        cursor: pointer;
+        transition: transform 0.25s;
+      }
+      .env-wrap:hover {
+        transform: scale(1.04);
+      }
+      .env-wrap.opened {
+        cursor: default;
+        pointer-events: none;
+      }
+
+      /* Back panel */
+      .env-back {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(160deg, #c0392b 0%, #7a1111 100%);
+        border-radius: 6px;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Bottom triangle (pocket) */
+      .env-pocket {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 6px;
+      }
+      .env-pocket::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: calc(clamp(240px, 60vw, 340px) / 2 + 2px) solid transparent;
+        border-right: calc(clamp(240px, 60vw, 340px) / 2 + 2px) solid
+          transparent;
+        border-bottom: calc(clamp(160px, 42vw, 230px) * 0.56) solid #9b2020;
+      }
+
+      /* Left & right triangles */
+      .env-side-l,
+      .env-side-r {
+        position: absolute;
+        bottom: 0;
+        width: 0;
+        height: 0;
+      }
+      .env-side-l {
+        left: 0;
+        border-bottom: calc(clamp(160px, 42vw, 230px) / 2) solid transparent;
+        border-top: calc(clamp(160px, 42vw, 230px) / 2) solid transparent;
+        border-left: calc(clamp(240px, 60vw, 340px) / 2) solid #8a1515;
+      }
+      .env-side-r {
+        right: 0;
+        border-bottom: calc(clamp(160px, 42vw, 230px) / 2) solid transparent;
+        border-top: calc(clamp(160px, 42vw, 230px) / 2) solid transparent;
+        border-right: calc(clamp(240px, 60vw, 340px) / 2) solid #8a1515;
+      }
+
+      /* Flap (top triangle) — rotates open */
+      .env-flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform-origin: top center;
+        transform-style: preserve-3d;
+        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 4;
+      }
+      .env-flap svg {
+        display: block;
+        width: 100%;
+      }
+      .env-wrap.opened .env-flap {
+        transform: rotateX(-175deg);
+      }
+
+      /* Seal on the flap */
+      .env-seal {
+        position: absolute;
+        /* vertically: sits at fold line = 50% of envelope height - half seal height */
+        top: calc(clamp(160px, 42vw, 230px) * 0.46);
+        left: 50%;
+        transform: translateX(-50%);
+        width: clamp(34px, 9vw, 46px);
+        height: clamp(34px, 9vw, 46px);
+        background: radial-gradient(circle at 35% 35%, #ffe082, #f9a825);
+        border-radius: 50%;
+        border: 2.5px solid #f59300;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: clamp(1rem, 3vw, 1.3rem);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        z-index: 5;
+        transition:
+          transform 0.3s,
+          opacity 0.3s;
+      }
+      .env-wrap.opened .env-seal {
+        transform: translateX(-50%) scale(0);
+        opacity: 0;
+      }
+
+      /* Letter card that rises out */
+      .env-letter {
+        position: absolute;
+        bottom: 12%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 82%;
+        background: #fdf8ef;
+        border-radius: 4px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+        padding: clamp(10px, 3vw, 16px) clamp(12px, 3.5vw, 20px);
+        z-index: 2;
+        font-family: "Caveat", cursive;
+        color: #4a2010;
+        font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+        line-height: 1.45;
+        text-align: center;
+        transition:
+          transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) 0.45s,
+          opacity 0.6s ease 0.45s;
+        opacity: 0;
+        /* starts hidden inside envelope */
+        transform: translateX(-50%) translateY(30px);
+      }
+      .env-wrap.opened .env-letter {
+        transform: translateX(-50%) translateY(-72%);
+        opacity: 1;
+      }
+      .env-letter .letter-line {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .env-letter .letter-heart {
+        font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+        display: block;
+        margin-top: 6px;
+        animation: heartBeat 1.2s ease infinite 1.5s;
+      }
+
+      /* ── Floating flowers ── */
+      .flower-particle {
+        position: fixed;
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        pointer-events: none;
+        z-index: 999;
+        opacity: 0;
+        animation: flowerFloat var(--dur, 2.8s) ease-out var(--delay, 0s)
+          forwards;
+      }
+      @keyframes flowerFloat {
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.3);
+        }
+        15% {
+          opacity: 1;
+          transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2))
+            rotate(30deg) scale(1.1);
+        }
+        80% {
+          opacity: 0.8;
+          transform: translate(calc(var(--tx) * 0.85), calc(var(--ty) * 0.85))
+            rotate(200deg) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--tx), var(--ty)) rotate(280deg) scale(0.7);
+        }
+      }
+
+      @keyframes heartBeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.25);
+        }
+      }
+
+      /* ─── SCENE 5: HERO ─── */
+      #scene-5 {
+        background: url("https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=1920&auto=format&fit=crop")
+          center/cover;
+        position: relative;
+        padding: 20px;
+      }
+      #scene-5::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 0 20px;
+      }
+      .hero-content h1 {
+        font-family: "Caveat", cursive;
+        font-size: clamp(2rem, 8vw, 4rem);
+        margin: 10px 0;
+        color: #fff;
+      }
+      .hero-content p {
+        font-size: clamp(0.85rem, 2.5vw, 1.2rem);
+        font-weight: 300;
+      }
+      .btn {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid #fff;
+        color: #fff;
+        padding: clamp(8px, 2vw, 10px) clamp(18px, 4vw, 30px);
+        border-radius: 30px;
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        margin-top: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-family: "Poppins", sans-serif;
+        backdrop-filter: blur(5px);
+      }
+      .btn:hover {
+        background: #fff;
+        color: #333;
+      }
+
+      /* ─── SCENE 6: SURAT & GALERI ─── */
+      #scene-6 {
+        flex-direction: row;
+        gap: clamp(15px, 4vw, 50px);
+        padding: clamp(15px, 3vw, 50px);
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .letter-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: clamp(260px, 45%, 500px);
+        max-width: 100%;
+        flex-shrink: 1;
+      }
+      .letter {
+        background: #fcf6e8;
+        color: #333;
+        padding: clamp(20px, 4vw, 40px);
+        border-radius: 10px;
+        width: 100%;
+        font-family: "Caveat", cursive;
+        font-size: clamp(1rem, 2.5vw, 1.5rem);
+        line-height: 1.5;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        text-align: left;
+        margin-bottom: 25px;
+      }
+      .letter h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+      }
+      .tap-surprise {
+        cursor: pointer;
+        font-size: clamp(0.75rem, 2vw, 1rem);
+        text-decoration: none;
+        border-bottom: 1px solid #fff;
+        letter-spacing: 2px;
+        transition: 0.3s;
+        padding-bottom: 3px;
+        white-space: nowrap;
+      }
+      .tap-surprise:hover {
+        color: #f48fb1;
+        border-color: #f48fb1;
+      }
+
+      /* ─── GALLERY: starts from bottom, scrolls to top ─── */
+      .gallery-wrapper {
+        width: clamp(180px, 28vw, 280px);
+        height: clamp(45vh, 75vh, 80vh);
+        overflow: hidden;
+        position: relative;
+        flex-shrink: 0;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          black 8%,
+          black 92%,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          black 8%,
+          black 92%,
+          transparent
+        );
+      }
+      .gallery-track {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        /* Start from below the wrapper, scroll upward */
+        animation: scrollUp 32s linear infinite;
+      }
+      .gallery-track img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border: 5px solid #fff;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        display: block;
+      }
+
+      /* ─── SCENE 7: KUE ─── */
+      .cake-wrapper {
+        text-align: center;
+        transition: 0.5s;
+        z-index: 10;
+      }
+      .cake {
+        font-size: clamp(4rem, 12vw, 6rem);
+        margin-top: 20px;
+      }
+      .countdown {
+        font-size: clamp(3rem, 10vw, 5rem);
+        font-family: "Caveat", cursive;
+        margin-bottom: 20px;
+      }
+      .wish-text {
+        font-family: "Caveat", cursive;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        color: #ffd700;
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      /* Color wheel */
+      .color-wheel {
+        position: fixed;
+        bottom: clamp(20px, 5vw, 50px);
+        right: clamp(20px, 5vw, 50px);
+        width: clamp(55px, 12vw, 80px);
+        height: clamp(55px, 12vw, 80px);
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 20;
+        background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+        animation: spin 4s linear infinite;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      }
+      .pointer-arrow {
+        position: fixed;
+        bottom: clamp(90px, 18vw, 140px);
+        right: clamp(20px, 5vw, 65px);
+        font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        animation: bounce 1s infinite;
+        font-family: "Caveat", cursive;
+        z-index: 20;
+        white-space: nowrap;
+      }
+
+      /* Floating messages */
+      .floating-msg {
+        position: fixed;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        font-size: clamp(0.9rem, 3vw, 1.3rem);
+        font-weight: 600;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+        pointer-events: none;
+        z-index: 30;
+        animation: floatAway 2.5s ease-out forwards;
+        white-space: nowrap;
+      }
+
+      /* ─── KEYFRAMES ─── */
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      @keyframes loadBar {
+        0% {
+          width: 0;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(10px);
+        }
+      }
+      @keyframes scrollUp {
+        /* Photos start below the wrapper, travel upward through it, exit at the top */
+        0% {
+          transform: translateY(80vh);
+        }
+        100% {
+          transform: translateY(-50%);
+        }
+      }
+      @keyframes floatAway {
+        0% {
+          opacity: 1;
+          transform: translate(0, 0) scale(0.5);
+        }
+        10% {
+          opacity: 1;
+          transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2))
+            scale(1.2);
+        }
+        80% {
+          opacity: 0.8;
+          transform: translate(calc(var(--tx) * 0.8), calc(var(--ty) * 0.8))
+            scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--tx), var(--ty)) scale(1.2);
+        }
+      }
+
+      /* ─── MOBILE BREAKPOINTS ─── */
+      @media (max-width: 600px) {
+        #scene-1 {
+          flex-direction: column;
+          gap: 20px;
+          padding: 20px 15px;
+          justify-content: center;
+        }
+        .polaroid {
+          transform: rotate(-2deg);
+        }
+
+        #scene-6 {
+          flex-direction: column;
+          align-items: center;
+          padding: 20px 15px;
+          gap: 20px;
+          justify-content: flex-start;
+          padding-top: 30px;
+        }
+        .letter-container {
+          width: 95%;
+          max-width: 420px;
+        }
+        .gallery-wrapper {
+          width: 90%;
+          max-width: 300px;
+          height: 45vh;
+        }
+        @keyframes scrollUp {
+          0% {
+            transform: translateY(45vh);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+      }
+
+      @media (max-width: 380px) {
+        .numpad button {
+          width: 42px;
+          height: 42px;
+          font-size: 1rem;
+        }
+        .numpad {
+          gap: 8px;
+          max-width: 165px;
+        }
+      }
+
+      /* Allow scene 6 to scroll internally on small screens */
+      @media (max-height: 600px) {
+        #scene-6 {
+          overflow-y: auto;
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+        .gallery-wrapper {
+          height: 60vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="bgMusic" loop>
+      <source
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <!-- SCENE 1: LOGIN -->
+    <div id="scene-1" class="scene active">
+      <div class="polaroid">
+        <img
+          src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=400&auto=format&fit=crop"
+          alt="Memories"
+        />
+        <p>Happy Birthday!<br />Bubo</p>
+      </div>
+      <div class="login-box">
+        <h2>ENTER A PASSCODE</h2>
+        <div class="dots" id="pass-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="numpad">
+          <button onclick="pressKey('1')">1</button
+          ><button onclick="pressKey('2')">2</button
+          ><button onclick="pressKey('3')">3</button>
+          <button onclick="pressKey('4')">4</button
+          ><button onclick="pressKey('5')">5</button
+          ><button onclick="pressKey('6')">6</button>
+          <button onclick="pressKey('7')">7</button
+          ><button onclick="pressKey('8')">8</button
+          ><button onclick="pressKey('9')">9</button>
+          <button onclick="clearPass()">C</button
+          ><button onclick="pressKey('0')">0</button
+          ><button onclick="pressKey('-')">-</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2: TANGGAL -->
+    <div id="scene-2" class="scene">
+      <h1>01 / 01 / 01</h1>
+    </div>
+
+    <!-- SCENE 3: LOADING -->
+    <div id="scene-3" class="scene">
+      <div class="cake" style="font-size: 3rem; margin: 0">🎂</div>
+      <div class="loading-text">Hey gurl! 💝</div>
+      <p style="font-size: clamp(0.8rem, 2.5vw, 1rem)">
+        Loading your birthday surprise...
+      </p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+
+    <!-- SCENE 4: ANIMATED ENVELOPE -->
+    <div id="scene-4" class="scene">
+      <p class="s4-title">Happy Birthday, Bubo! 🌸</p>
+
+      <!-- Envelope -->
+      <div class="env-wrap" id="envWrap" onclick="openEnvelope()">
+        <!-- back layer -->
+        <div class="env-back"></div>
+        <!-- letter (rises out) -->
+        <div class="env-letter">
+          <span class="letter-line">For you, with love 💌</span>
+          <span class="letter-line" style="opacity: 0.75; font-size: 0.9em"
+            >tap to continue →</span
+          >
+          <span class="letter-heart">❤️</span>
+        </div>
+        <!-- side triangles -->
+        <div class="env-side-l"></div>
+        <div class="env-side-r"></div>
+        <!-- bottom pocket -->
+        <div class="env-pocket"></div>
+        <!-- flap SVG -->
+        <div class="env-flap">
+          <svg
+            viewBox="0 0 340 130"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <polygon points="0,0 340,0 170,130" fill="#b71c1c" />
+            <!-- subtle fold line -->
+            <line
+              x1="0"
+              y1="0"
+              x2="170"
+              y2="130"
+              stroke="rgba(0,0,0,.12)"
+              stroke-width="1"
+            />
+            <line
+              x1="340"
+              y1="0"
+              x2="170"
+              y2="130"
+              stroke="rgba(0,0,0,.12)"
+              stroke-width="1"
+            />
+          </svg>
+        </div>
+        <!-- seal -->
+        <div class="env-seal">✿</div>
+      </div>
+
+      <p class="s4-hint" id="envHint">(Klik amplop untuk membuka)</p>
+    </div>
+
+    <!-- SCENE 5: HERO IMAGE -->
+    <div id="scene-5" class="scene">
+      <div class="hero-content">
+        <p>01 - 01 - 01</p>
+        <h1>Happy Birthday Baby! 🎉</h1>
+        <p>I hope this little gift will make you happy ✨</p>
+        <p style="margin-top: 10px">
+          <i
+            >"This gift is like our love — thoughtful, unique, and meant just
+            for you." 🌹</i
+          >
+        </p>
+        <button class="btn" onclick="goToScene(6)">✉ READ YOUR LETTER</button>
+      </div>
+    </div>
+
+    <!-- SCENE 6: SURAT & GALERI -->
+    <div id="scene-6" class="scene">
+      <div class="letter-container">
+        <div class="letter">
+          <h2>HAPPY<br />Birthday</h2>
+          <p>
+            My Love, you are the love of my life. The one I have been waiting
+            for. I love you beyond measure. You are the reason I smile.
+          </p>
+          <br />
+          <p>
+            No matter how much time passes, my care and appreciation for you
+            will never fade. Thank you for being my happiness, my safe place,
+            and one of the best things that has ever happened to me.
+          </p>
+          <br />
+          <p>Once again, Happy Birthday my love! ❤️</p>
+          <p style="text-align: center; margin-top: 20px; font-weight: bold">
+            I love you 💋
+          </p>
+        </div>
+        <p class="tap-surprise" onclick="startCakeSequence()">
+          — tap here for a surprise 🤍 —
+        </p>
+      </div>
+
+      <!-- Gallery: 1 column, 1:1 ratio, scrolls bottom → top -->
+      <div class="gallery-wrapper">
+        <div class="gallery-track">
+          <!-- 6 photos -->
+          <img
+            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 1"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1621801306185-1172b8eb30fb?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 2"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1534105267860-261ce6242502?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 3"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 4"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 5"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 6"
+          />
+          <!-- duplicated for loop -->
+          <img
+            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 1"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1621801306185-1172b8eb30fb?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 2"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1534105267860-261ce6242502?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 3"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 4"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 5"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=300&auto=format&fit=crop"
+            alt="Foto 6"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 7: KUE -->
+    <div id="scene-7" class="scene">
+      <div class="cake-wrapper" id="the-cake">
+        <div class="wish-text" id="wish-text" style="display: none">
+          ✨ Make a Wish ✨
+        </div>
+        <div class="countdown" id="countdown" style="display: none">5</div>
+        <div class="cake">🎂</div>
+      </div>
+      <div class="pointer-arrow" id="pointer-arrow" style="display: none">
+        Tap here! ⬇
+      </div>
+      <div
+        class="color-wheel"
+        id="color-wheel"
+        style="display: none"
+        onclick="handleWheelClick(event)"
+      ></div>
+    </div>
+
+    <script>
+      const CORRECT_PASSCODE = "010101";
+      const popMessages = [
+        "I Love You! ❤️",
+        "Happy Birthday! 🎉",
+        "You are perfect ✨",
+        "My Everything 💖",
+        "Smile Always! 😊",
+        "You're beautiful 🌹",
+      ];
+      let currentPassInput = "";
+      let clickCount = 0;
+      const TARGET_CLICKS = 5;
+
+      function pressKey(num) {
+        if (currentPassInput.length < 6) {
+          currentPassInput += num;
+          updateDots();
+          if (currentPassInput.length === 6) setTimeout(checkPasscode, 300);
+        }
+      }
+      function clearPass() {
+        currentPassInput = "";
+        updateDots();
+      }
+      function updateDots() {
+        document.querySelectorAll(".dot").forEach((dot, i) => {
+          dot.classList.toggle("filled", i < currentPassInput.length);
+        });
+      }
+      function checkPasscode() {
+        if (currentPassInput === CORRECT_PASSCODE) {
+          document
+            .getElementById("bgMusic")
+            .play()
+            .catch(() => {});
+          goToScene(2);
+          setTimeout(() => goToScene(3), 3000);
+          setTimeout(() => goToScene(4), 7000);
+        } else {
+          const dc = document.getElementById("pass-dots");
+          dc.style.transform = "translateX(10px)";
+          setTimeout(() => (dc.style.transform = "translateX(-10px)"), 100);
+          setTimeout(() => (dc.style.transform = "translateX(0)"), 200);
+          clearPass();
+        }
+      }
+
+      function goToScene(n) {
+        document
+          .querySelectorAll(".scene")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(`scene-${n}`).classList.add("active");
+        if (n === 3) document.body.style.backgroundColor = "#fcf9f2";
+        else if (n === 5) document.body.style.backgroundColor = "#000";
+        else if (n === 6) document.body.style.backgroundColor = "#7a1111";
+        else document.body.style.backgroundColor = "#7a1111";
+      }
+
+      function openEnvelope() {
+        const wrap = document.getElementById("envWrap");
+        const hint = document.getElementById("envHint");
+        if (wrap.classList.contains("opened")) return;
+
+        wrap.classList.add("opened");
+        if (hint) hint.style.opacity = "0";
+
+        // Spawn flower particles from the envelope center
+        const flowers = [
+          "🌸",
+          "🌺",
+          "🌼",
+          "🌻",
+          "🌷",
+          "💐",
+          "🌹",
+          "✿",
+          "❀",
+          "🌸",
+        ];
+        const rect = wrap.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 22; i++) {
+          const el = document.createElement("div");
+          el.className = "flower-particle";
+          el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+
+          const angle = (Math.random() * 360 * Math.PI) / 180;
+          const dist = 80 + Math.random() * 220;
+          const tx = Math.cos(angle) * dist;
+          const ty = Math.sin(angle) * dist - 60;
+
+          el.style.left = cx - 14 + "px";
+          el.style.top = cy - 14 + "px";
+          el.style.setProperty("--tx", tx + "px");
+          el.style.setProperty("--ty", ty + "px");
+          el.style.setProperty("--dur", 2 + Math.random() * 1.5 + "s");
+          el.style.setProperty("--delay", i * 0.07 + "s");
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4500);
+        }
+
+        // After letter finishes rising, go to scene 5
+        setTimeout(() => goToScene(5), 2200);
+      }
+
+      function startCakeSequence() {
+        goToScene(7);
+        document.body.style.backgroundColor = "#f48fb1";
+        setTimeout(() => {
+          document.body.style.backgroundColor = "#111";
+          document.getElementById("wish-text").style.display = "block";
+          document.getElementById("countdown").style.display = "block";
+          let count = 5;
+          let timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+              document.getElementById("countdown").innerText = count;
+            } else {
+              clearInterval(timer);
+              document.getElementById("countdown").style.display = "none";
+              document.getElementById("wish-text").style.display = "none";
+              document.getElementById("pointer-arrow").style.display = "block";
+              document.getElementById("color-wheel").style.display = "block";
+            }
+          }, 1000);
+        }, 2000);
+      }
+
+      function handleWheelClick(e) {
+        clickCount++;
+        const msg = document.createElement("div");
+        msg.className = "floating-msg";
+        msg.innerText =
+          popMessages[Math.floor(Math.random() * popMessages.length)];
+        const rect = e.target.getBoundingClientRect();
+        msg.style.left = rect.left + rect.width / 2 - 50 + "px";
+        msg.style.top = rect.top + "px";
+        msg.style.setProperty("--tx", `${(Math.random() - 0.5) * 200}px`);
+        msg.style.setProperty("--ty", `${Math.random() * -150 - 50}px`);
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 2500);
+        if (clickCount >= TARGET_CLICKS) {
+          document.getElementById("pointer-arrow").style.display = "none";
+          document.getElementById("color-wheel").style.display = "none";
+          document.body.style.backgroundColor = "#f48fb1";
+          triggerFireworks();
+        }
+      }
+
+      function triggerFireworks() {
+        var duration = 4000,
+          end = Date.now() + duration;
+        var defaults = {
+          startVelocity: 25,
+          spread: 360,
+          ticks: 60,
+          zIndex: 9999,
+        };
+        var interval = setInterval(() => {
+          var tl = end - Date.now();
+          if (tl <= 0) return clearInterval(interval);
+          var pc = 40 * (tl / duration);
+          confetti(
+            Object.assign({}, defaults, {
+              particleCount: pc,
+              origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 },
+            }),
+          );
+          confetti(
+            Object.assign({}, defaults, {
+              particleCount: pc,
+              origin: { x: Math.random() * 0.3 + 0.7, y: Math.random() - 0.2 },
+            }),
+          );
+        }, 300);
+      }
+    </script>
+  </body>
+</html>
