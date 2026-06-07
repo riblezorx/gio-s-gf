@@ -386,9 +386,10 @@
       }
 
       /* ─── SCENE 5: HERO ─── */
+      /* Background diatur via style="background-image:url(...)" di tag HTML-nya — gampang diganti! */
       #scene-5 {
-        background: url("https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=1920&auto=format&fit=crop")
-          center/cover;
+        background-size: cover;
+        background-position: center;
         position: relative;
         padding: 20px;
       }
@@ -514,8 +515,8 @@
         flex-direction: column;
         gap: 15px;
         width: 100%;
-        /* Start from below the wrapper, scroll upward */
-        animation: scrollUp 32s linear infinite;
+        /* Driven by JS RAF — no CSS animation here */
+        will-change: transform;
       }
       .gallery-track img {
         width: 100%;
@@ -622,15 +623,7 @@
           transform: translateY(10px);
         }
       }
-      @keyframes scrollUp {
-        /* Photos start below the wrapper, travel upward through it, exit at the top */
-        0% {
-          transform: translateY(80vh);
-        }
-        100% {
-          transform: translateY(-50%);
-        }
-      }
+      /* scrollUp is now handled by JS RAF in initGallery() */
       @keyframes floatAway {
         0% {
           opacity: 1;
@@ -681,14 +674,7 @@
           max-width: 300px;
           height: 45vh;
         }
-        @keyframes scrollUp {
-          0% {
-            transform: translateY(45vh);
-          }
-          100% {
-            transform: translateY(-50%);
-          }
-        }
+        /* scrollUp handled by JS */
       }
 
       @media (max-width: 380px) {
@@ -727,10 +713,7 @@
     <!-- SCENE 1: LOGIN -->
     <div id="scene-1" class="scene active">
       <div class="polaroid">
-        <img
-          src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=400&auto=format&fit=crop"
-          alt="Memories"
-        />
+        <img src="login.jpeg" alt="Memories" />
         <p>Happy Birthday!<br />Bubo</p>
       </div>
       <div class="login-box">
@@ -762,7 +745,7 @@
 
     <!-- SCENE 2: TANGGAL -->
     <div id="scene-2" class="scene">
-      <h1>01 / 01 / 01</h1>
+      <h1>10 / 06 / 05</h1>
     </div>
 
     <!-- SCENE 3: LOADING -->
@@ -831,9 +814,16 @@
     </div>
 
     <!-- SCENE 5: HERO IMAGE -->
-    <div id="scene-5" class="scene">
+    <!-- ⬇ GANTI URL DI BAWAH INI DENGAN LINK FOTO KAMU ⬇ -->
+    <div
+      id="scene-5"
+      class="scene"
+      style="
+        background-image: url(&quot;https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=1920&auto=format&fit=crop&quot;);
+      "
+    >
       <div class="hero-content">
-        <p>01 - 01 - 01</p>
+        <p>10 - 06 - 05</p>
         <h1>Happy Birthday Baby! 🎉</h1>
         <p>I hope this little gift will make you happy ✨</p>
         <p style="margin-top: 10px">
@@ -850,21 +840,25 @@
     <div id="scene-6" class="scene">
       <div class="letter-container">
         <div class="letter">
-          <h2>HAPPY<br />Birthday</h2>
+          <h2>HAPPY 21st BIRTHDAY<br />Stefani Amalia Candra🤍 ✨</h2>
           <p>
-            My Love, you are the love of my life. The one I have been waiting
-            for. I love you beyond measure. You are the reason I smile.
+            Today is not just about turning 21, it's about celebrating the most
+            beautiful person who has colored my days with happiness, warmth, and
+            endless memories.
           </p>
           <br />
           <p>
-            No matter how much time passes, my care and appreciation for you
-            will never fade. Thank you for being my happiness, my safe place,
-            and one of the best things that has ever happened to me.
+            "You are not just a chapter in my story, you are the reason I love
+            reading every page of my life." 🤍 May your smile never fade, may
+            your heart always be full of peace, and may this new age bring
+            countless blessings, success, and beautiful surprises. Forever
+            grateful that among billions of people in this world, I found you. I
+            love you more than yesterday, but less than tomorrow. ♾️❤️
           </p>
           <br />
-          <p>Once again, Happy Birthday my love! ❤️</p>
+          <p>— With all my love, Your favorite person xixixi</p>
           <p style="text-align: center; margin-top: 20px; font-weight: bold">
-            I love you 💋
+            I love you ❤️
           </p>
         </div>
         <p class="tap-surprise" onclick="startCakeSequence()">
@@ -876,55 +870,19 @@
       <div class="gallery-wrapper">
         <div class="gallery-track">
           <!-- 6 photos -->
-          <img
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 1"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1621801306185-1172b8eb30fb?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 2"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1534105267860-261ce6242502?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 3"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 4"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 5"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 6"
-          />
+          <img src="1.jpeg" alt="Foto 1" />
+          <img src="2.jpeg" alt="Foto 2" />
+          <img src="3.jpeg" alt="Foto 3" />
+          <img src="4.jpeg" alt="Foto 4" />
+          <img src="5.jpeg" alt="Foto 5" />
+          <img src="6.jpeg" alt="Foto 6" />
           <!-- duplicated for loop -->
-          <img
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 1"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1621801306185-1172b8eb30fb?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 2"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1534105267860-261ce6242502?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 3"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 4"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 5"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=300&auto=format&fit=crop"
-            alt="Foto 6"
-          />
+          <img src="1.jpeg" alt="Foto 1" />
+          <img src="2.jpeg" alt="Foto 2" />
+          <img src="3.jpeg" alt="Foto 3" />
+          <img src="4.jpeg" alt="Foto 4" />
+          <img src="5.jpeg" alt="Foto 5" />
+          <img src="6.jpeg" alt="Foto 6" />
         </div>
       </div>
     </div>
@@ -950,7 +908,7 @@
     </div>
 
     <script>
-      const CORRECT_PASSCODE = "010101";
+      const CORRECT_PASSCODE = "100605";
       const popMessages = [
         "I Love You! ❤️",
         "Happy Birthday! 🎉",
@@ -997,6 +955,48 @@
         }
       }
 
+      // ── Gallery RAF engine ──
+      let _galRAF = null;
+      let _galY = 0;
+      let _galHalf = 0; // height of one set of 6 photos (loop point)
+      let _galInited = false;
+
+      function initGallery() {
+        const wrapper = document.querySelector(".gallery-wrapper");
+        const track = document.querySelector(".gallery-track");
+        if (!wrapper || !track) return;
+
+        // Measure one image height (square = wrapper width) + gap
+        const imgSize = wrapper.offsetWidth;
+        const gap = 15;
+        const n = 6; // unique photo count
+        _galHalf = n * imgSize + (n - 1) * gap; // height of one set
+
+        // Start exactly at wrapper bottom so first photo enters from there
+        _galY = wrapper.offsetHeight;
+
+        if (_galRAF) cancelAnimationFrame(_galRAF);
+        _galInited = true;
+
+        let lastTs = null;
+        const speed = 55; // px per second
+
+        function step(ts) {
+          if (!lastTs) lastTs = ts;
+          const dt = (ts - lastTs) / 1000;
+          lastTs = ts;
+
+          _galY -= speed * dt;
+
+          // Loop: when we've scrolled one full set upward, reset seamlessly
+          if (_galY < -_galHalf) _galY += _galHalf;
+
+          track.style.transform = `translateY(${_galY}px)`;
+          _galRAF = requestAnimationFrame(step);
+        }
+        _galRAF = requestAnimationFrame(step);
+      }
+
       function goToScene(n) {
         document
           .querySelectorAll(".scene")
@@ -1004,8 +1004,19 @@
         document.getElementById(`scene-${n}`).classList.add("active");
         if (n === 3) document.body.style.backgroundColor = "#fcf9f2";
         else if (n === 5) document.body.style.backgroundColor = "#000";
-        else if (n === 6) document.body.style.backgroundColor = "#7a1111";
-        else document.body.style.backgroundColor = "#7a1111";
+        else if (n === 6) {
+          document.body.style.backgroundColor = "#7a1111";
+          // Small delay so the scene is visible & dimensions are correct
+          setTimeout(initGallery, 80);
+        } else {
+          document.body.style.backgroundColor = "#7a1111";
+          // Pause gallery when leaving scene 6
+          if (_galRAF) {
+            cancelAnimationFrame(_galRAF);
+            _galRAF = null;
+            _galInited = false;
+          }
+        }
       }
 
       function openEnvelope() {
@@ -1086,13 +1097,35 @@
         msg.className = "floating-msg";
         msg.innerText =
           popMessages[Math.floor(Math.random() * popMessages.length)];
-        const rect = e.target.getBoundingClientRect();
-        msg.style.left = rect.left + rect.width / 2 - 50 + "px";
-        msg.style.top = rect.top + "px";
-        msg.style.setProperty("--tx", `${(Math.random() - 0.5) * 200}px`);
-        msg.style.setProperty("--ty", `${Math.random() * -150 - 50}px`);
+
+        // Safe spawn zone: anywhere in the viewport except bottom-right corner (where the wheel is)
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const msgW = 220; // approx message width
+        const msgH = 44; // approx message height
+        const margin = 20;
+
+        // Divide viewport into 3 zones: top, left-center, right-center
+        // Bottom-right is excluded (that's where the wheel lives)
+        const zones = [
+          { x: [margin, vw * 0.65 - msgW], y: [margin, vh * 0.4] }, // top strip
+          { x: [margin, vw * 0.45 - msgW], y: [vh * 0.3, vh * 0.7 - msgH] }, // left-middle
+          { x: [vw * 0.25, vw * 0.65 - msgW], y: [vh * 0.4, vh * 0.72 - msgH] }, // center-middle
+        ];
+        const zone = zones[Math.floor(Math.random() * zones.length)];
+        const spawnX = zone.x[0] + Math.random() * (zone.x[1] - zone.x[0]);
+        const spawnY = zone.y[0] + Math.random() * (zone.y[1] - zone.y[0]);
+
+        msg.style.left = spawnX + "px";
+        msg.style.top = spawnY + "px";
+
+        // Drift: small random movement so it doesn't feel static
+        msg.style.setProperty("--tx", `${(Math.random() - 0.5) * 60}px`);
+        msg.style.setProperty("--ty", `${-(30 + Math.random() * 70)}px`);
+
         document.body.appendChild(msg);
         setTimeout(() => msg.remove(), 2500);
+
         if (clickCount >= TARGET_CLICKS) {
           document.getElementById("pointer-arrow").style.display = "none";
           document.getElementById("color-wheel").style.display = "none";
