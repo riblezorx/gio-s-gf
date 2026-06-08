@@ -1094,8 +1094,7 @@
         clickCount++;
         const msg = document.createElement("div");
         msg.className = "floating-msg";
-        msg.innerText =
-          popMessages[Math.floor(Math.random() * popMessages.length)];
+        msg.innerText = popMessages[(clickCount - 1) % popMessages.length];
 
         // Safe spawn zone: anywhere in the viewport except bottom-right corner (where the wheel is)
         const vw = window.innerWidth;
